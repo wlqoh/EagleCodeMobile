@@ -2,6 +2,7 @@ import { PropsWithChildren } from 'react';
 import {
   ActivityIndicator,
   Pressable,
+  StyleProp,
   StyleSheet,
   Text,
   ViewStyle,
@@ -16,7 +17,7 @@ type ButtonProps = PropsWithChildren<{
   variant?: ButtonVariant;
   busy?: boolean;
   disabled?: boolean;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   accessibilityLabel?: string;
 }>;
 

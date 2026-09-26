@@ -1,9 +1,9 @@
 import { PropsWithChildren } from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { colors } from '@/theme/tokens';
 
-type ScreenProps = PropsWithChildren<{ style?: ViewStyle }>;
+type ScreenProps = PropsWithChildren<{ style?: StyleProp<ViewStyle> }>;
 
 export function Screen({ children, style }: ScreenProps) {
   return <View style={[styles.root, style]}>{children}</View>;

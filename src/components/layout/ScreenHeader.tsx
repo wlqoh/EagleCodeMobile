@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { colors, font, space } from '@/theme/tokens';
@@ -11,9 +12,12 @@ type ScreenHeaderProps = {
   actions?: ReactNode;
 };
 
+/** Используется только на экранах-табах без нативного хедера — сама отвечает за отступ под статус-бар/чёлку. */
 export function ScreenHeader({ eyebrow, title, description, actions }: ScreenHeaderProps) {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingTop: insets.top + space.md }]}>
       <View style={styles.text}>
         <Eyebrow style={styles.eyebrow}>{eyebrow}</Eyebrow>
         <Text style={styles.title}>{title}</Text>
@@ -31,7 +35,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: space.md,
     paddingHorizontal: space.lg,
-    paddingTop: space.lg,
     paddingBottom: space.md,
   },
   text: {

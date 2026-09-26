@@ -1,28 +1,28 @@
 import { Link } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text } from 'react-native';
 
+import { Logo } from '@/components/brand/Logo';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Eyebrow } from '@/components/ui/Eyebrow';
+import { Field } from '@/components/ui/Field';
 import { Screen } from '@/components/ui/Screen';
 import { useAuth } from '@/contexts/AuthContext';
 import { colors, font, space } from '@/theme/tokens';
 
-/**
- * Каркас экрана входа (фаза 1–2). Форма с полями и валидацией — фаза 3.
- * Демо-кнопки ниже входят через реальный DataClient учётными данными из sid-БД.
- */
 export default function LoginScreen() {
   const { login } = useAuth();
+  const [email, setEmail] = useState('athlete@eaglecode.ru');
+  const [password, setPassword] = useState('demo123');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const loginAs = async (email: string) => {
+  const submit = async () => {
     setError(null);
     setBusy(true);
     try {
-      await login({ email, password: 'demo123' });
+      await login({ email: email.trim(), password });
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Не удалось войти');
     } finally {
@@ -32,35 +32,65 @@ export default function LoginScreen() {
 
   return (
     <Screen>
-      <View style={styles.content}>
-        <Eyebrow>Eaglecode sport</Eyebrow>
-        <Text style={styles.title}>Вход в кабинет участника</Text>
-        <Card style={styles.card}>
-          <Text style={styles.body}>
-            Форма входа с полями появится на фазе 3. Кнопки ниже уже входят через DataClient.
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.select({ ios: 'padding', android: undefined })}
+      >
+        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+          <Logo size={48} />
+          <Eyebrow style={styles.eyebrow}>Спортивная высота // РД</Eyebrow>
+          <Text style={styles.title}>Войти в EagleCode</Text>
+          <Text style={styles.subtitle}>
+            Используйте демо-доступ спортсмена или администратора.
           </Text>
-          {error ? <Text style={styles.error}>{error}</Text> : null}
-          <Button busy={busy} onPress={() => loginAs('athlete@eaglecode.ru')}>
-            Войти как участник (демо)
-          </Button>
-          <Button variant="secondary" busy={busy} onPress={() => loginAs('admin@eaglecode.ru')}>
-            Войти как администратор (демо)
-          </Button>
-        </Card>
-        <Link href="/register" style={styles.link}>
-          Создать новый профиль
-        </Link>
-      </View>
+          <Card style={styles.card}>
+            <Field
+              label="Email"
+              autoCapitalize="none"
+              autoComplete="email"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
+            />
+            <Field
+              label="Пароль"
+              hint="Для демо: demo123"
+              secureTextEntry
+              autoComplete="current-password"
+              value={password}
+              onChangeText={setPassword}
+            />
+            {error ? (
+              <Text style={styles.error} accessibilityRole="alert">
+                {error}
+              </Text>
+            ) : null}
+            <Button busy={busy} onPress={submit}>
+              Войти в профиль
+            </Button>
+          </Card>
+          <Link href="/register" style={styles.link}>
+            Создать новый профиль
+          </Link>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  content: {
+  flex: {
     flex: 1,
+  },
+  content: {
+    flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: space.xl,
-    gap: space.md,
+    paddingVertical: space.xxl,
+    gap: space.sm,
+  },
+  eyebrow: {
+    marginTop: space.lg,
   },
   title: {
     color: colors.text,
@@ -68,15 +98,15 @@ const styles = StyleSheet.create({
     fontSize: 28,
     letterSpacing: -0.5,
   },
-  card: {
-    gap: space.md,
-    marginTop: space.lg,
-  },
-  body: {
+  subtitle: {
     color: colors.body,
     fontFamily: font.sans,
     fontSize: 13,
     lineHeight: 19,
+  },
+  card: {
+    gap: space.md,
+    marginTop: space.lg,
   },
   error: {
     color: colors.danger,
@@ -88,6 +118,6 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontFamily: font.sansSemiBold,
     fontSize: 13,
-    marginTop: space.sm,
+    marginTop: space.md,
   },
 });

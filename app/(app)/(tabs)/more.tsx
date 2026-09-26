@@ -4,8 +4,10 @@ import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Href } from 'expo-router';
 
 import { ScreenHeader } from '@/components/layout/ScreenHeader';
+import { Card } from '@/components/ui/Card';
 import { Screen } from '@/components/ui/Screen';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAthlete } from '@/hooks/useData';
 import { colors, font, radius, space } from '@/theme/tokens';
 
 const menuItems: { href: Href; label: string }[] = [
@@ -18,6 +20,7 @@ const menuItems: { href: Href; label: string }[] = [
 
 export default function MoreScreen() {
   const { user, logout } = useAuth();
+  const athlete = useAthlete(user?.athleteId);
 
   const confirmLogout = () => {
     Alert.alert('Выйти из аккаунта?', undefined, [
@@ -28,7 +31,16 @@ export default function MoreScreen() {
 
   return (
     <Screen>
-      <ScreenHeader eyebrow={user?.fullName ?? ''} title="Ещё" />
+      <ScreenHeader eyebrow="Кабинет участника" title="Ещё" />
+      <Card style={styles.userCard}>
+        <View style={styles.avatar}>
+          <Text style={styles.avatarText}>{athlete.data?.avatarInitials ?? user?.fullName.slice(0, 2)}</Text>
+        </View>
+        <View style={styles.userInfo}>
+          <Text style={styles.userName}>{user?.fullName}</Text>
+          <Text style={styles.userEmail}>{user?.email}</Text>
+        </View>
+      </Card>
       <View style={styles.menu}>
         {menuItems.map((item) => (
           <Link key={item.label} href={item.href} asChild>
@@ -48,6 +60,41 @@ export default function MoreScreen() {
 }
 
 const styles = StyleSheet.create({
+  userCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.md,
+    marginHorizontal: space.lg,
+    marginBottom: space.lg,
+  },
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.highest,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarText: {
+    color: colors.primary,
+    fontFamily: font.displayBold,
+    fontSize: 16,
+    textTransform: 'uppercase',
+  },
+  userInfo: {
+    flex: 1,
+    gap: 2,
+  },
+  userName: {
+    color: colors.text,
+    fontFamily: font.sansSemiBold,
+    fontSize: 15,
+  },
+  userEmail: {
+    color: colors.muted,
+    fontFamily: font.sans,
+    fontSize: 12,
+  },
   menu: {
     marginHorizontal: space.lg,
     backgroundColor: colors.panel,
