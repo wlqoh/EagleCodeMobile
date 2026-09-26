@@ -10,13 +10,17 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { Screen } from '@/components/ui/Screen';
 import { useAthletes, useCities } from '@/hooks/useData';
-import { colors, font, space } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, font, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 import { formatMeters } from '@/utils/format';
 
 export default function MapScreen() {
   const athletes = useAthletes();
   const cities = useCities();
   const [active, setActive] = useState('c1');
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const summary = useMemo(() => {
     const city = cities.data?.find((item) => item.id === active);
@@ -113,7 +117,8 @@ export default function MapScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
   content: {
     paddingBottom: space.xxl,
     gap: space.lg,

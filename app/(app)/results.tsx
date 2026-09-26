@@ -9,13 +9,17 @@ import { Screen } from '@/components/ui/Screen';
 import { useAuth } from '@/contexts/AuthContext';
 import { placeholders } from '@/core/placeholders';
 import { useCompetitions, useResults } from '@/hooks/useData';
-import { colors, font, space } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, font, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 import { formatDate, formatMeters } from '@/utils/format';
 
 export default function ResultsScreen() {
   const { user } = useAuth();
   const results = useResults();
   const competitions = useCompetitions();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const header = (
     <>
@@ -110,7 +114,8 @@ export default function ResultsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
   list: {
     paddingHorizontal: space.lg,
     paddingBottom: space.xxl,

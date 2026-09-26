@@ -1,5 +1,7 @@
 /** Цветовые и размерные токены — перенесены из CSS-переменных `EagleCode/src/index.css`. */
-export const colors = {
+export type ColorScheme = 'light' | 'dark';
+
+const darkColors = {
   bg: '#121413',
   deep: '#0d0f0e',
   panel: '#1a1c1b',
@@ -38,6 +40,53 @@ export const colors = {
   progressBorder: '#202822',
 } as const;
 
+export type Colors = { [K in keyof typeof darkColors]: string };
+
+/** Светлая тема — та же семантика токенов, что и в `darkColors`, значения подобраны для контраста на светлом фоне. */
+const lightColors: Colors = {
+  bg: '#eef2ea',
+  deep: '#e2e8dc',
+  panel: '#ffffff',
+  raised: '#f4f7f1',
+  highest: '#e8ede3',
+  border: '#d7ded1',
+  outline: '#b9c7b5',
+  text: '#141e17',
+  body: '#44543f',
+  muted: '#6d7c68',
+  primary: '#189a56',
+  primarySoft: '#0d7a45',
+  onPrimary: '#f4fff8',
+  gold: '#9c7a1f',
+  danger: '#c9362b',
+
+  cardBorder: 'rgba(31,64,40,0.12)',
+  inputBg: '#ffffff',
+  inputPlaceholder: '#8b9a86',
+  inputHoverBorder: '#9fb098',
+  badgeBorder: '#d3ddcd',
+  badgeText: '#44543f',
+  badgePrimaryBorder: 'rgba(24,154,86,0.35)',
+  badgePrimaryBg: 'rgba(24,154,86,0.1)',
+  badgeGoldText: '#7a5e14',
+  badgeGoldBg: 'rgba(156,122,31,0.12)',
+  badgeGoldBorder: 'rgba(156,122,31,0.32)',
+  badgeDangerText: '#a3281f',
+  badgeDangerBg: 'rgba(201,54,43,0.09)',
+  badgeDangerBorder: 'rgba(201,54,43,0.3)',
+  buttonSecondaryHoverBorder: '#9fb098',
+  buttonDangerText: '#8f231b',
+  buttonDangerBg: '#fbe4e1',
+  buttonDangerBorder: '#e7a49c',
+  progressTrack: '#e4e9df',
+  progressBorder: '#d3ddcd',
+};
+
+export const colorsByScheme: Record<ColorScheme, Colors> = {
+  dark: darkColors,
+  light: lightColors,
+};
+
 export const radius = {
   sm: 6,
   md: 8,
@@ -65,7 +114,3 @@ export const font = {
   mono: 'JetBrainsMono_400Regular',
   monoSemiBold: 'JetBrainsMono_600SemiBold',
 } as const;
-
-export const theme = { colors, radius, space, font } as const;
-
-export type Theme = typeof theme;

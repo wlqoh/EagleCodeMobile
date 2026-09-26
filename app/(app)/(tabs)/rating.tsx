@@ -16,7 +16,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { placeholders } from '@/core/placeholders';
 import type { Athlete } from '@/core/types';
 import { useAthletes, useCities } from '@/hooks/useData';
-import { colors, space } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 
 const metricIcons = [UsersRound, MapPin, Trophy, BarChart3];
 
@@ -26,6 +28,8 @@ export default function RatingScreen() {
   const cities = useCities();
   const [query, setQuery] = useState('');
   const [discipline, setDiscipline] = useState('Все');
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const disciplines = useMemo(
     () => ['Все', ...new Set(athletes.data?.flatMap((item) => item.disciplines) ?? [])],
@@ -135,28 +139,29 @@ export default function RatingScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  list: {
-    paddingBottom: space.xxl,
-  },
-  metricGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    rowGap: space.md,
-    paddingHorizontal: space.lg,
-    marginBottom: space.lg,
-  },
-  metricItem: {
-    width: '48%',
-  },
-  chartCard: {
-    marginHorizontal: space.lg,
-    marginBottom: space.lg,
-  },
-  filters: {
-    paddingHorizontal: space.lg,
-    gap: space.sm,
-    marginBottom: space.sm,
-  },
-});
+const createStyles = (_colors: Colors) =>
+  StyleSheet.create({
+    list: {
+      paddingBottom: space.xxl,
+    },
+    metricGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+      rowGap: space.md,
+      paddingHorizontal: space.lg,
+      marginBottom: space.lg,
+    },
+    metricItem: {
+      width: '48%',
+    },
+    chartCard: {
+      marginHorizontal: space.lg,
+      marginBottom: space.lg,
+    },
+    filters: {
+      paddingHorizontal: space.lg,
+      gap: space.sm,
+      marginBottom: space.sm,
+    },
+  });

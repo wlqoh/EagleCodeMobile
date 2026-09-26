@@ -1,9 +1,11 @@
 import { Tabs } from 'expo-router';
 import { BarChart3, Map, Menu, Trophy, UserRound } from 'lucide-react-native';
 
-import { colors, font } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { font } from '@/theme/tokens';
 
 export default function TabsLayout() {
+  const { colors } = useTheme();
   return (
     <Tabs
       screenOptions={{

@@ -6,12 +6,16 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { Screen } from '@/components/ui/Screen';
 import { useAthletes, useCities } from '@/hooks/useData';
-import { colors, font, space } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, font, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 import { formatMeters } from '@/utils/format';
 
 export default function CitiesScreen() {
   const athletes = useAthletes();
   const cities = useCities();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   if (athletes.isError || cities.isError) {
     return (
@@ -92,7 +96,8 @@ export default function CitiesScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
   list: {
     padding: space.lg,
     paddingBottom: space.xxl,

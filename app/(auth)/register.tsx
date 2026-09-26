@@ -12,12 +12,16 @@ import { Screen } from '@/components/ui/Screen';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCities } from '@/hooks/useData';
 import { clearPickedCity, usePickedCity } from '@/state/cityPick';
-import { colors, font, radius, space } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, font, radius, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 
 export default function RegisterScreen() {
   const { register } = useAuth();
   const cities = useCities();
   const pickedCityId = usePickedCity();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const selectedCity = cities.data?.find((city) => city.id === pickedCityId);
 
   const [fullName, setFullName] = useState('');
@@ -116,7 +120,8 @@ export default function RegisterScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
   flex: {
     flex: 1,
   },
@@ -150,7 +155,7 @@ const styles = StyleSheet.create({
     gap: space.xs + 3,
   },
   label: {
-    color: '#d7ddd8',
+    color: colors.text,
     fontFamily: font.sansSemiBold,
     fontSize: 13,
   },
@@ -188,4 +193,4 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: space.md,
   },
-});
+  });

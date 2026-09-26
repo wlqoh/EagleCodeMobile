@@ -14,7 +14,9 @@ import { Screen } from '@/components/ui/Screen';
 import { useAuth } from '@/contexts/AuthContext';
 import { placeholders } from '@/core/placeholders';
 import { useAthlete, useLevels, useNotifications, useResults } from '@/hooks/useData';
-import { colors, font, space } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, font, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 import { formatMeters } from '@/utils/format';
 
 export default function ProfileScreen() {
@@ -23,6 +25,8 @@ export default function ProfileScreen() {
   const levels = useLevels();
   const results = useResults();
   const notifications = useNotifications();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const unreadCount = notifications.data?.filter((item) => !item.readAt).length ?? 0;
   const refreshing = athlete.isFetching || levels.isFetching || results.isFetching;
@@ -202,7 +206,8 @@ export default function ProfileScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
   content: {
     paddingBottom: space.xxl,
     gap: space.lg,

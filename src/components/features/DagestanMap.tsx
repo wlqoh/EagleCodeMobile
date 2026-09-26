@@ -2,7 +2,9 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
 import type { Athlete, City } from '@/core/types';
-import { colors, font, radius } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, font, radius } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 import { formatMeters } from '@/utils/format';
 
 const positions: [number, number][] = [
@@ -21,6 +23,8 @@ type DagestanMapProps = {
 };
 
 export function DagestanMap({ cities, athletes, activeCityId, onSelect }: DagestanMapProps) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <View
       style={styles.root}
@@ -66,49 +70,50 @@ export function DagestanMap({ cities, athletes, activeCityId, onSelect }: Dagest
   );
 }
 
-const styles = StyleSheet.create({
-  root: {
-    width: '100%',
-    aspectRatio: 500 / 420,
-    backgroundColor: colors.panel,
-    borderWidth: 1,
-    borderColor: colors.cardBorder,
-    borderRadius: radius.lg,
-    overflow: 'hidden',
-  },
-  node: {
-    position: 'absolute',
-    alignItems: 'center',
-    transform: [{ translateX: -6 }, { translateY: -6 }],
-  },
-  dot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: colors.muted,
-    borderWidth: 2,
-    borderColor: colors.bg,
-  },
-  dotActive: {
-    backgroundColor: colors.primary,
-  },
-  label: {
-    marginTop: 4,
-    alignItems: 'center',
-    width: 88,
-  },
-  labelName: {
-    color: colors.text,
-    fontFamily: font.sansSemiBold,
-    fontSize: 11,
-    textAlign: 'center',
-  },
-  labelNameActive: {
-    color: colors.primary,
-  },
-  labelMeters: {
-    color: colors.muted,
-    fontFamily: font.mono,
-    fontSize: 10,
-  },
-});
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
+    root: {
+      width: '100%',
+      aspectRatio: 500 / 420,
+      backgroundColor: colors.panel,
+      borderWidth: 1,
+      borderColor: colors.cardBorder,
+      borderRadius: radius.lg,
+      overflow: 'hidden',
+    },
+    node: {
+      position: 'absolute',
+      alignItems: 'center',
+      transform: [{ translateX: -6 }, { translateY: -6 }],
+    },
+    dot: {
+      width: 12,
+      height: 12,
+      borderRadius: 6,
+      backgroundColor: colors.muted,
+      borderWidth: 2,
+      borderColor: colors.bg,
+    },
+    dotActive: {
+      backgroundColor: colors.primary,
+    },
+    label: {
+      marginTop: 4,
+      alignItems: 'center',
+      width: 88,
+    },
+    labelName: {
+      color: colors.text,
+      fontFamily: font.sansSemiBold,
+      fontSize: 11,
+      textAlign: 'center',
+    },
+    labelNameActive: {
+      color: colors.primary,
+    },
+    labelMeters: {
+      color: colors.muted,
+      fontFamily: font.mono,
+      fontSize: 10,
+    },
+  });

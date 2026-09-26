@@ -7,12 +7,16 @@ import { Screen } from '@/components/ui/Screen';
 import type { Notification } from '@/core/types';
 import { useNotifications } from '@/hooks/useData';
 import { dataClient } from '@/services/client';
-import { colors, font, space } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, font, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 import { formatDate } from '@/utils/format';
 
 export default function NotificationsScreen() {
   const notifications = useNotifications();
   const queryClient = useQueryClient();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const markRead = useMutation({
     mutationFn: (id: string) => dataClient.markNotificationRead(id),
@@ -81,7 +85,8 @@ export default function NotificationsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
   list: {
     padding: space.lg,
     gap: space.sm,

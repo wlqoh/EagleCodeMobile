@@ -10,7 +10,9 @@ import { LoadingState } from '@/components/ui/LoadingState';
 import { Screen } from '@/components/ui/Screen';
 import type { CompetitionStatus } from '@/core/types';
 import { useCompetitions } from '@/hooks/useData';
-import { colors, space } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 
 const statusOptions: { key: 'all' | CompetitionStatus; label: string }[] = [
   { key: 'all', label: 'Все' },
@@ -23,6 +25,8 @@ export default function CompetitionsScreen() {
   const competitions = useCompetitions();
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState<'all' | CompetitionStatus>('all');
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const filtered = useMemo(
     () =>
@@ -101,16 +105,17 @@ export default function CompetitionsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  list: {
-    paddingBottom: space.xxl,
-  },
-  filters: {
-    paddingHorizontal: space.lg,
-    gap: space.sm,
-    marginBottom: space.md,
-  },
-  cardWrap: {
-    paddingHorizontal: space.lg,
-  },
-});
+const createStyles = (_colors: Colors) =>
+  StyleSheet.create({
+    list: {
+      paddingBottom: space.xxl,
+    },
+    filters: {
+      paddingHorizontal: space.lg,
+      gap: space.sm,
+      marginBottom: space.md,
+    },
+    cardWrap: {
+      paddingHorizontal: space.lg,
+    },
+  });

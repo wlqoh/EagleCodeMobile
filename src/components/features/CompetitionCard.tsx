@@ -6,7 +6,9 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import type { Competition } from '@/core/types';
-import { colors, font, radius, space } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, font, radius, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 import { formatMeters } from '@/utils/format';
 
 const statusLabel: Record<Competition['status'], string> = {
@@ -17,6 +19,8 @@ const statusLabel: Record<Competition['status'], string> = {
 };
 
 export function CompetitionCard({ competition }: { competition: Competition }) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <Card style={styles.card}>
       <View style={styles.metaRow}>
@@ -60,46 +64,47 @@ export function CompetitionCard({ competition }: { competition: Competition }) {
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    gap: space.sm,
-  },
-  metaRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  icon: {
-    width: 44,
-    height: 44,
-    borderRadius: radius.md,
-    backgroundColor: colors.highest,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: space.xs,
-  },
-  title: {
-    color: colors.text,
-    fontFamily: font.displayBold,
-    fontSize: 17,
-  },
-  description: {
-    color: colors.body,
-    fontFamily: font.sans,
-    fontSize: 13,
-    lineHeight: 18,
-  },
-  metaList: {
-    gap: space.xs + 2,
-  },
-  metaItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.xs + 2,
-  },
-  metaText: {
-    flex: 1,
-    color: colors.body,
-    fontFamily: font.sans,
-    fontSize: 12,
-  },
-});
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
+    card: {
+      gap: space.sm,
+    },
+    metaRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    icon: {
+      width: 44,
+      height: 44,
+      borderRadius: radius.md,
+      backgroundColor: colors.highest,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: space.xs,
+    },
+    title: {
+      color: colors.text,
+      fontFamily: font.displayBold,
+      fontSize: 17,
+    },
+    description: {
+      color: colors.body,
+      fontFamily: font.sans,
+      fontSize: 13,
+      lineHeight: 18,
+    },
+    metaList: {
+      gap: space.xs + 2,
+    },
+    metaItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: space.xs + 2,
+    },
+    metaText: {
+      flex: 1,
+      color: colors.body,
+      fontFamily: font.sans,
+      fontSize: 12,
+    },
+  });

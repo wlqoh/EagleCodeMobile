@@ -2,9 +2,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle, Defs, Line, LinearGradient, Path, Stop } from 'react-native-svg';
 
 import { placeholders } from '@/core/placeholders';
-import { colors, font } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, font } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 
 export function LineChart() {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <View
       style={styles.root}
@@ -44,18 +48,19 @@ export function LineChart() {
   );
 }
 
-const styles = StyleSheet.create({
-  root: {
-    width: '100%',
-  },
-  captionRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 4,
-  },
-  caption: {
-    color: colors.muted,
-    fontFamily: font.mono,
-    fontSize: 10,
-  },
-});
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
+    root: {
+      width: '100%',
+    },
+    captionRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 4,
+    },
+    caption: {
+      color: colors.muted,
+      fontFamily: font.mono,
+      fontSize: 10,
+    },
+  });

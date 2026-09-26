@@ -9,7 +9,8 @@ import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Field } from '@/components/ui/Field';
 import { Screen } from '@/components/ui/Screen';
 import { useAuth } from '@/contexts/AuthContext';
-import { colors, font, space } from '@/theme/tokens';
+import { Colors, font, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 
 export default function LoginScreen() {
   const { login } = useAuth();
@@ -17,6 +18,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('demo123');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const styles = useThemedStyles(createStyles);
 
   const submit = async () => {
     setError(null);
@@ -78,7 +80,8 @@ export default function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
   flex: {
     flex: 1,
   },

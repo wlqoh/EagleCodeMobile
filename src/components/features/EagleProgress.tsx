@@ -6,7 +6,9 @@ import { Card } from '@/components/ui/Card';
 import { Progress } from '@/components/ui/Progress';
 import { getEagleProgress } from '@/core/eagleLevels';
 import type { EagleLevel } from '@/core/types';
-import { colors, font, radius, space } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, font, radius, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 import { formatMeters } from '@/utils/format';
 
 type EagleProgressProps = {
@@ -16,6 +18,8 @@ type EagleProgressProps = {
 };
 
 export function EagleProgress({ meters, levels, detailed = true }: EagleProgressProps) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { level, next, progress, remaining } = getEagleProgress(meters, levels);
 
   return (
@@ -72,7 +76,8 @@ export function EagleProgress({ meters, levels, detailed = true }: EagleProgress
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
   card: {
     gap: space.sm,
   },

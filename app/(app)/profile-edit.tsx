@@ -11,12 +11,14 @@ import { Screen } from '@/components/ui/Screen';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAthlete } from '@/hooks/useData';
 import { dataClient } from '@/services/client';
-import { colors, font, space } from '@/theme/tokens';
+import { Colors, font, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 
 export default function ProfileEditScreen() {
   const { user } = useAuth();
   const athlete = useAthlete(user?.athleteId);
   const queryClient = useQueryClient();
+  const styles = useThemedStyles(createStyles);
 
   const [syncedId, setSyncedId] = useState<string | null>(null);
   const [organization, setOrganization] = useState('');
@@ -93,17 +95,18 @@ export default function ProfileEditScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  flex: {
-    flex: 1,
-  },
-  content: {
-    padding: space.lg,
-    gap: space.md,
-  },
-  error: {
-    color: colors.danger,
-    fontFamily: font.sansMedium,
-    fontSize: 13,
-  },
-});
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
+    flex: {
+      flex: 1,
+    },
+    content: {
+      padding: space.lg,
+      gap: space.md,
+    },
+    error: {
+      color: colors.danger,
+      fontFamily: font.sansMedium,
+      fontSize: 13,
+    },
+  });

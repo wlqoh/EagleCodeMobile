@@ -1,10 +1,12 @@
 import { Redirect, Stack } from 'expo-router';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { colors, font } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { font } from '@/theme/tokens';
 
 export default function AppLayout() {
   const { user, ready } = useAuth();
+  const { colors } = useTheme();
 
   if (!ready) {
     return null;

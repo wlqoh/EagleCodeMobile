@@ -11,12 +11,16 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getEagleProgress } from '@/core/eagleLevels';
 import { useLevels } from '@/hooks/useData';
 import { dataClient } from '@/services/client';
-import { colors, font, radius, space } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, font, radius, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 import { formatMeters } from '@/utils/format';
 
 export default function LevelsScreen() {
   const { user } = useAuth();
   const levels = useLevels();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const athlete = useQuery({
     queryKey: ['athlete', user?.athleteId],
     queryFn: () => dataClient.getAthlete(user!.athleteId!),
@@ -103,7 +107,8 @@ export default function LevelsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
   list: {
     paddingHorizontal: space.lg,
     paddingBottom: space.xxl,

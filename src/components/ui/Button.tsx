@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useMemo } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -8,7 +8,9 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { colors, font, radius, space } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, font, radius, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
 
@@ -30,6 +32,9 @@ export function Button({
   style,
   accessibilityLabel,
 }: ButtonProps) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
+  const variantStyles = useMemo(() => createVariantStyles(colors), [colors]);
   const isDisabled = disabled || busy;
   const variantStyle = variantStyles[variant];
 
@@ -59,46 +64,51 @@ export function Button({
   );
 }
 
-const styles = StyleSheet.create({
-  base: {
-    minHeight: 44,
-    borderWidth: 1,
-    borderColor: 'transparent',
-    borderRadius: radius.md,
-    paddingVertical: space.sm + 1,
-    paddingHorizontal: space.lg,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: space.sm,
-  },
-  label: {
-    fontFamily: font.sansBold,
-    fontSize: 14,
-  },
-  disabled: {
-    opacity: 0.55,
-  },
-  pressed: {
-    opacity: 0.85,
-  },
-});
+const createStyles = (_colors: Colors) =>
+  StyleSheet.create({
+    base: {
+      minHeight: 44,
+      borderWidth: 1,
+      borderColor: 'transparent',
+      borderRadius: radius.md,
+      paddingVertical: space.sm + 1,
+      paddingHorizontal: space.lg,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: space.sm,
+    },
+    label: {
+      fontFamily: font.sansBold,
+      fontSize: 14,
+    },
+    disabled: {
+      opacity: 0.55,
+    },
+    pressed: {
+      opacity: 0.85,
+    },
+  });
 
-const variantStyles: Record<ButtonVariant, { container: object; text: { color: string } }> = {
-  primary: {
-    container: { backgroundColor: colors.primary },
-    text: { color: colors.onPrimary },
-  },
-  secondary: {
-    container: { backgroundColor: colors.highest, borderColor: colors.border },
-    text: { color: colors.text },
-  },
-  ghost: {
-    container: { backgroundColor: 'transparent' },
-    text: { color: colors.muted },
-  },
-  danger: {
-    container: { backgroundColor: colors.buttonDangerBg, borderColor: colors.buttonDangerBorder },
-    text: { color: colors.buttonDangerText },
-  },
-};
+function createVariantStyles(
+  colors: Colors,
+): Record<ButtonVariant, { container: object; text: { color: string } }> {
+  return {
+    primary: {
+      container: { backgroundColor: colors.primary },
+      text: { color: colors.onPrimary },
+    },
+    secondary: {
+      container: { backgroundColor: colors.highest, borderColor: colors.border },
+      text: { color: colors.text },
+    },
+    ghost: {
+      container: { backgroundColor: 'transparent' },
+      text: { color: colors.muted },
+    },
+    danger: {
+      container: { backgroundColor: colors.buttonDangerBg, borderColor: colors.buttonDangerBorder },
+      text: { color: colors.buttonDangerText },
+    },
+  };
+}

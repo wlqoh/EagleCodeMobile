@@ -5,10 +5,13 @@ import type { Href } from 'expo-router';
 
 import { ScreenHeader } from '@/components/layout/ScreenHeader';
 import { Card } from '@/components/ui/Card';
+import { Chips } from '@/components/ui/Chips';
 import { Screen } from '@/components/ui/Screen';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAthlete } from '@/hooks/useData';
-import { colors, font, radius, space } from '@/theme/tokens';
+import { ThemeMode, useTheme } from '@/theme/ThemeContext';
+import { Colors, font, radius, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 
 const menuItems: { href: Href; label: string }[] = [
   { href: '/results', label: 'Результаты' },
@@ -18,9 +21,17 @@ const menuItems: { href: Href; label: string }[] = [
   { href: '/notifications', label: 'Уведомления' },
 ];
 
+const themeOptions: { key: ThemeMode; label: string }[] = [
+  { key: 'light', label: 'Светлая' },
+  { key: 'dark', label: 'Тёмная' },
+  { key: 'system', label: 'Системная' },
+];
+
 export default function MoreScreen() {
   const { user, logout } = useAuth();
   const athlete = useAthlete(user?.athleteId);
+  const { colors, mode, setMode } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const confirmLogout = () => {
     Alert.alert('Выйти из аккаунта?', undefined, [
@@ -41,6 +52,14 @@ export default function MoreScreen() {
           <Text style={styles.userEmail}>{user?.email}</Text>
         </View>
       </Card>
+      <Card style={styles.themeCard}>
+        <Text style={styles.sectionLabel}>Тема оформления</Text>
+        <Chips
+          options={themeOptions.map((item) => ({ key: item.key, label: item.label }))}
+          value={mode}
+          onChange={(key) => setMode(key as ThemeMode)}
+        />
+      </Card>
       <View style={styles.menu}>
         {menuItems.map((item) => (
           <Link key={item.label} href={item.href} asChild>
@@ -59,7 +78,8 @@ export default function MoreScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
   userCard: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -94,6 +114,16 @@ const styles = StyleSheet.create({
     color: colors.muted,
     fontFamily: font.sans,
     fontSize: 12,
+  },
+  themeCard: {
+    gap: space.sm,
+    marginHorizontal: space.lg,
+    marginBottom: space.lg,
+  },
+  sectionLabel: {
+    color: colors.text,
+    fontFamily: font.sansSemiBold,
+    fontSize: 14,
   },
   menu: {
     marginHorizontal: space.lg,

@@ -8,12 +8,14 @@ import { LoadingState } from '@/components/ui/LoadingState';
 import { Screen } from '@/components/ui/Screen';
 import { useCities } from '@/hooks/useData';
 import { setPickedCity, usePickedCity } from '@/state/cityPick';
-import { colors, font, space } from '@/theme/tokens';
+import { Colors, font, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 
 export default function CityPickerScreen() {
   const cities = useCities();
   const pickedCityId = usePickedCity();
   const [query, setQuery] = useState('');
+  const styles = useThemedStyles(createStyles);
 
   const filtered = useMemo(
     () => cities.data?.filter((city) => city.name.toLowerCase().includes(query.toLowerCase())) ?? [],
@@ -62,44 +64,45 @@ export default function CityPickerScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    paddingTop: space.lg,
-  },
-  title: {
-    color: colors.text,
-    fontFamily: font.displayBold,
-    fontSize: 20,
-    paddingHorizontal: space.lg,
-    marginBottom: space.md,
-  },
-  search: {
-    marginHorizontal: space.lg,
-    marginBottom: space.sm,
-  },
-  list: {
-    paddingHorizontal: space.lg,
-    paddingBottom: space.xxl,
-  },
-  row: {
-    minHeight: 52,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.cardBorder,
-  },
-  rowName: {
-    color: colors.text,
-    fontFamily: font.sansMedium,
-    fontSize: 14,
-  },
-  rowNameActive: {
-    color: colors.primary,
-  },
-  rowDistrict: {
-    color: colors.muted,
-    fontFamily: font.sans,
-    fontSize: 12,
-  },
-});
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
+    screen: {
+      paddingTop: space.lg,
+    },
+    title: {
+      color: colors.text,
+      fontFamily: font.displayBold,
+      fontSize: 20,
+      paddingHorizontal: space.lg,
+      marginBottom: space.md,
+    },
+    search: {
+      marginHorizontal: space.lg,
+      marginBottom: space.sm,
+    },
+    list: {
+      paddingHorizontal: space.lg,
+      paddingBottom: space.xxl,
+    },
+    row: {
+      minHeight: 52,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      borderBottomWidth: 1,
+      borderBottomColor: colors.cardBorder,
+    },
+    rowName: {
+      color: colors.text,
+      fontFamily: font.sansMedium,
+      fontSize: 14,
+    },
+    rowNameActive: {
+      color: colors.primary,
+    },
+    rowDistrict: {
+      color: colors.muted,
+      fontFamily: font.sans,
+      fontSize: 12,
+    },
+  });

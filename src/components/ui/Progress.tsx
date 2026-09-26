@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
-import { colors, radius } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
+import { Colors, radius } from '@/theme/tokens';
 
 type ProgressProps = {
   /** 0–100 */
@@ -9,6 +10,7 @@ type ProgressProps = {
 
 export function Progress({ value }: ProgressProps) {
   const clamped = Math.max(0, Math.min(100, value));
+  const styles = useThemedStyles(createStyles);
 
   return (
     <View
@@ -21,19 +23,20 @@ export function Progress({ value }: ProgressProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  track: {
-    width: '100%',
-    height: 7,
-    overflow: 'hidden',
-    backgroundColor: colors.progressTrack,
-    borderWidth: 1,
-    borderColor: colors.progressBorder,
-    borderRadius: radius.pill,
-  },
-  fill: {
-    height: '100%',
-    borderRadius: radius.pill,
-    backgroundColor: colors.primary,
-  },
-});
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
+    track: {
+      width: '100%',
+      height: 7,
+      overflow: 'hidden',
+      backgroundColor: colors.progressTrack,
+      borderWidth: 1,
+      borderColor: colors.progressBorder,
+      borderRadius: radius.pill,
+    },
+    fill: {
+      height: '100%',
+      borderRadius: radius.pill,
+      backgroundColor: colors.primary,
+    },
+  });

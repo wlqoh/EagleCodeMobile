@@ -5,7 +5,9 @@ import type { LucideProps } from 'lucide-react-native';
 
 import { Card } from '@/components/ui/Card';
 import { Progress } from '@/components/ui/Progress';
-import { colors, font, space } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, font, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 
 type MetricCardProps = {
   label: string;
@@ -17,6 +19,8 @@ type MetricCardProps = {
 };
 
 export function MetricCard({ label, value, note, icon: Icon, progress, style }: MetricCardProps) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <Card style={[styles.card, style]}>
       <View style={styles.labelRow}>
@@ -33,33 +37,34 @@ export function MetricCard({ label, value, note, icon: Icon, progress, style }: 
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    gap: space.sm,
-  },
-  labelRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  label: {
-    color: colors.muted,
-    fontFamily: font.sansMedium,
-    fontSize: 12,
-  },
-  value: {
-    color: colors.text,
-    fontFamily: font.displayBold,
-    fontSize: 24,
-  },
-  noteRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  note: {
-    color: colors.primary,
-    fontFamily: font.sansMedium,
-    fontSize: 11,
-  },
-});
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
+    card: {
+      gap: space.sm,
+    },
+    labelRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    label: {
+      color: colors.muted,
+      fontFamily: font.sansMedium,
+      fontSize: 12,
+    },
+    value: {
+      color: colors.text,
+      fontFamily: font.displayBold,
+      fontSize: 24,
+    },
+    noteRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+    },
+    note: {
+      color: colors.primary,
+      fontFamily: font.sansMedium,
+      fontSize: 11,
+    },
+  });

@@ -12,7 +12,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { placeholders } from '@/core/placeholders';
 import type { Achievement } from '@/core/types';
 import { useAchievements } from '@/hooks/useData';
-import { colors, font, radius, space } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, font, radius, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 import { formatDate } from '@/utils/format';
 
 const statusOptions: { key: 'all' | Achievement['status']; label: string }[] = [
@@ -26,6 +28,8 @@ export default function AchievementsScreen() {
   const { user } = useAuth();
   const achievements = useAchievements(user?.athleteId);
   const [status, setStatus] = useState<'all' | Achievement['status']>('all');
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const header = (
     <>
@@ -119,7 +123,8 @@ export default function AchievementsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
   list: {
     paddingHorizontal: space.lg,
     paddingBottom: space.xxl,

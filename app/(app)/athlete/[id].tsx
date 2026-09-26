@@ -8,13 +8,15 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { Screen } from '@/components/ui/Screen';
 import { useAthlete, useCities, useLevels } from '@/hooks/useData';
-import { colors, font, space } from '@/theme/tokens';
+import { Colors, font, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 
 export default function AthleteDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const athlete = useAthlete(id);
   const cities = useCities();
   const levels = useLevels();
+  const styles = useThemedStyles(createStyles);
 
   if (athlete.isError) {
     return (
@@ -70,7 +72,8 @@ export default function AthleteDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
   content: {
     padding: space.lg,
     gap: space.lg,

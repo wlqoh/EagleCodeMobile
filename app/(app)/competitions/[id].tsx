@@ -12,7 +12,9 @@ import { Screen } from '@/components/ui/Screen';
 import { useAuth } from '@/contexts/AuthContext';
 import { useApplications } from '@/hooks/useData';
 import { dataClient } from '@/services/client';
-import { colors, font, radius, space } from '@/theme/tokens';
+import { useTheme } from '@/theme/ThemeContext';
+import { Colors, font, radius, space } from '@/theme/tokens';
+import { useThemedStyles } from '@/theme/useThemedStyles';
 import { formatDate, formatMeters } from '@/utils/format';
 
 export default function CompetitionDetailScreen() {
@@ -20,6 +22,8 @@ export default function CompetitionDetailScreen() {
   const { user } = useAuth();
   const applications = useApplications();
   const queryClient = useQueryClient();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const competition = useQuery({
     queryKey: ['competition', id],
@@ -152,7 +156,8 @@ export default function CompetitionDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
   content: {
     padding: space.lg,
     gap: space.lg,
