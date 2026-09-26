@@ -23,14 +23,24 @@ describe('MockDataClient', () => {
   });
 
   it('registers credentials that can be used after logout', async () => {
-    await client.register({ fullName: 'Тестовый Спортсмен', email: 'new@example.ru', password: 'secret12', cityId: 'c1', organization: 'СШОР' });
+    await client.register({ fullName: 'Тестовый Спортсмен', email: 'new@example.ru', password: 'secret12', cityId: 'c1', organization: 'ДГТУ' });
     await expect(new MockDataClient(store).login({ email: 'new@example.ru', password: 'secret12' })).resolves.toMatchObject({ fullName: 'Тестовый Спортсмен' });
   });
 
   it('adds published result meters to the athlete', async () => {
     const before = await client.getAthlete('a1');
-    await client.publishResult({ athleteId: 'a1', competitionId: 'cp1', place: 1, score: '10.22', metersAwarded: 500 });
+    await client.publishResult({ athleteId: 'a1', competitionId: 'cp1', place: 1, score: '9 задач · 1142', metersAwarded: 500 });
     expect((await client.getAthlete('a1')).meters).toBe(before.meters + 500);
+  });
+
+  it('removes the legacy v1 and v2 databases and writes v3 on first load', async () => {
+    await store.setItem('eaglecode.mock.v1', JSON.stringify({ legacy: true }));
+    await store.setItem('eaglecode.mock.v2', JSON.stringify({ legacy: true }));
+    const fresh = new MockDataClient(store);
+    await fresh.getCities();
+    expect(await store.getItem('eaglecode.mock.v1')).toBeNull();
+    expect(await store.getItem('eaglecode.mock.v2')).toBeNull();
+    expect(await store.getItem('eaglecode.mock.v3')).not.toBeNull();
   });
 
   it('marks a notification as read and persists it', async () => {

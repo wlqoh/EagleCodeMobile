@@ -1,6 +1,7 @@
 // Источник: EagleCode/src/services/MockDataClient.ts (веб-версия), адаптировано под асинхронный KeyValueStore
 // (AsyncStorage вместо синхронного localStorage) — см. раздел 4.4 docs/PLAN.md.
 import { rankAthletes } from './eagleLevels';
+import { NO_RANK } from './ranks';
 import type { DataClient } from './DataClient';
 import { seedDatabase } from './seed';
 import type { KeyValueStore } from './storage';
@@ -18,7 +19,9 @@ import type {
   SessionUser,
 } from './types';
 
-const STORAGE_KEY = 'eaglecode.mock.v1';
+const STORAGE_KEY = 'eaglecode.mock.v3';
+/** Старые версии mock-базы: удаляются при первом запуске с новым сидом. */
+const LEGACY_STORAGE_KEYS = ['eaglecode.mock.v1', 'eaglecode.mock.v2'];
 const SESSION_KEY = 'eaglecode.session.v1';
 const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
 const pause = () => new Promise((resolve) => setTimeout(resolve, 80));
@@ -40,7 +43,10 @@ export class MockDataClient implements DataClient {
     if (this.db) return this.db;
     const stored = await this.store.getItem(STORAGE_KEY);
     const database = stored ? (JSON.parse(stored) as MockDatabase) : clone(seedDatabase);
-    if (!stored) await this.save(database);
+    if (!stored) {
+      await Promise.all(LEGACY_STORAGE_KEYS.map((key) => this.store.removeItem(key)));
+      await this.save(database);
+    }
     this.db = database;
     return database;
   }
@@ -72,7 +78,7 @@ export class MockDataClient implements DataClient {
       cityId: input.cityId,
       organization: input.organization,
       disciplines: [],
-      sportTitle: 'Без разряда',
+      sportTitle: NO_RANK,
       meters: 0,
       avatarInitials: input.fullName.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase(),
       joinedAt: new Date().toISOString(),

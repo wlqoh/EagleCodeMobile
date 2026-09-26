@@ -1,4 +1,7 @@
-/** Демо-заглушки, перенесённые 1:1 из веб-версии (EagleCode/src/pages/user/*). Не вычисляются из данных. */
+/**
+ * Демо-заглушки, перенесённые 1:1 из веб-версии (EagleCode/src/pages/user/*). Не вычисляются из данных;
+ * тексты адаптированы под спортивное программирование — расходятся с вебом.
+ */
 export const placeholders = {
   profile: {
     rank: '#04',
@@ -10,7 +13,7 @@ export const placeholders = {
     slices: [
       ['Общий рейтинг РД', '#04 / 1 284'],
       ['Махачкала', '#03 / 612'],
-      ['Лёгкая атлетика', '#05 / 390'],
+      ['Алгоритмическое', '#05 / 390'],
     ] as const,
   },
   rating: [
@@ -19,7 +22,7 @@ export const placeholders = {
     { label: 'Стартов', value: '86', note: '12 активных', progress: 68 },
     { label: 'Начислено', value: '3.84M м', note: '+248K в сезоне', progress: 83 },
   ],
-  results: { starts: '9', podiums: '3', bestPace: '4:18 / км' },
+  results: { starts: '9', podiums: '3', solved: '214' },
   achievements: {
     featuredTitle: 'Бронза республики — 2026',
     featuredText: 'Результат подтверждён официальным протоколом соревнования.',

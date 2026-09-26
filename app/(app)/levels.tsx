@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { Bird, Lock } from 'lucide-react-native';
-import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { Lock } from 'lucide-react-native';
+import { FlatList, Image, RefreshControl, StyleSheet, Text, View } from 'react-native';
 
+import { getEagleImage } from '@/components/features/eagleImages';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -12,7 +13,7 @@ import { getEagleProgress } from '@/core/eagleLevels';
 import { useLevels } from '@/hooks/useData';
 import { dataClient } from '@/services/client';
 import { useTheme } from '@/theme/ThemeContext';
-import { Colors, font, radius, space } from '@/theme/tokens';
+import { Colors, font, space } from '@/theme/tokens';
 import { useThemedStyles } from '@/theme/useThemedStyles';
 import { formatMeters } from '@/utils/format';
 
@@ -80,9 +81,12 @@ export default function LevelsScreen() {
           const isPassed = item.order < current.order;
           return (
             <Card style={[styles.card, isCurrent && styles.cardCurrent]}>
-              <View style={styles.symbol}>
-                <Bird color={isCurrent ? colors.onPrimary : colors.primary} size={20} />
-              </View>
+              <Image
+                source={getEagleImage(item.order, item.order > current.order)}
+                accessibilityRole="image"
+                accessibilityLabel={`Орёл ${item.id} — ${item.name}`}
+                style={styles.symbol}
+              />
               <View style={styles.info}>
                 <Text style={[styles.eyebrow, isCurrent && styles.textOnPrimary]}>
                   ОРЁЛ {item.id}
@@ -133,10 +137,8 @@ const createStyles = (colors: Colors) =>
   symbol: {
     width: 40,
     height: 40,
-    borderRadius: radius.md,
+    borderRadius: 20,
     backgroundColor: colors.highest,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   info: {
     flex: 1,

@@ -1,4 +1,4 @@
-import { Medal, Timer, Trophy } from 'lucide-react-native';
+import { Code, Medal, Trophy } from 'lucide-react-native';
 import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 
 import { Badge } from '@/components/ui/Badge';
@@ -40,10 +40,10 @@ export default function ResultsScreen() {
           </View>
         </Card>
         <Card style={styles.summaryTile}>
-          <Timer color={colors.primary} size={20} />
+          <Code color={colors.primary} size={20} />
           <View>
-            <Text style={styles.summaryLabel}>Лучший темп</Text>
-            <Text style={styles.summaryValue}>{placeholders.results.bestPace}</Text>
+            <Text style={styles.summaryLabel}>Решено задач</Text>
+            <Text style={styles.summaryValue}>{placeholders.results.solved}</Text>
           </View>
         </Card>
       </View>
@@ -97,7 +97,9 @@ export default function ResultsScreen() {
             <Card style={styles.resultCard}>
               <Text style={styles.place}>#{item.place}</Text>
               <View style={styles.resultInfo}>
-                <Text style={styles.competitionTitle}>{competition?.title}</Text>
+                <Text style={styles.competitionTitle} numberOfLines={2}>
+                  {competition?.title}
+                </Text>
                 <Text style={styles.competitionMeta}>
                   {competition?.location} · {formatDate(item.publishedAt)}
                 </Text>

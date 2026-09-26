@@ -12,3 +12,4 @@ export { EmptyState } from './EmptyState';
 export { Eyebrow } from './Eyebrow';
 export { Chips } from './Chips';
 export type { ChipOption } from './Chips';
+export { MultiChips } from './MultiChips';

@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { Screen } from '@/components/ui/Screen';
+import { disciplineLabel } from '@/core/disciplines';
 import { useAthletes, useCities } from '@/hooks/useData';
 import { useTheme } from '@/theme/ThemeContext';
 import { Colors, font, space } from '@/theme/tokens';
@@ -105,7 +106,10 @@ export default function MapScreen() {
           <View style={styles.statRow}>
             <Text style={styles.statLabel}>Ключевые дисциплины</Text>
             <Text style={styles.statValue}>
-              {summary.members.flatMap((item) => item.disciplines).slice(0, 2).join(', ') || '—'}
+              {[...new Set(summary.members.flatMap((m) => m.disciplines))]
+                .slice(0, 2)
+                .map(disciplineLabel)
+                .join(', ') || '—'}
             </Text>
           </View>
         </Card>

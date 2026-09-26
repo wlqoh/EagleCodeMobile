@@ -2,6 +2,7 @@ import { Link } from 'expo-router';
 import { Medal } from 'lucide-react-native';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { EagleAvatar } from '@/components/features/EagleAvatar';
 import { Badge } from '@/components/ui/Badge';
 import { getEagleProgress } from '@/core/eagleLevels';
 import type { Athlete, City } from '@/core/types';
@@ -38,9 +39,7 @@ export function RankingRow({ athlete, city, rank, highlighted = false }: Ranking
             #{String(rank).padStart(2, '0')}
           </Text>
         </View>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{athlete.avatarInitials}</Text>
-        </View>
+        <EagleAvatar meters={athlete.meters} size={32} />
         <View style={styles.info}>
           <Text style={styles.name} numberOfLines={1}>
             {athlete.fullName}
@@ -81,19 +80,6 @@ const createStyles = (colors: Colors) =>
     rankText: {
       color: colors.muted,
       fontFamily: font.monoSemiBold,
-      fontSize: 11,
-    },
-    avatar: {
-      width: 32,
-      height: 32,
-      borderRadius: 16,
-      backgroundColor: colors.highest,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    avatarText: {
-      color: colors.text,
-      fontFamily: font.sansSemiBold,
       fontSize: 11,
     },
     info: {

@@ -8,6 +8,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { Input } from '@/components/ui/Input';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { Screen } from '@/components/ui/Screen';
+import { DISCIPLINES } from '@/core/disciplines';
 import type { CompetitionStatus } from '@/core/types';
 import { useCompetitions } from '@/hooks/useData';
 import { useTheme } from '@/theme/ThemeContext';
@@ -21,10 +22,16 @@ const statusOptions: { key: 'all' | CompetitionStatus; label: string }[] = [
   { key: 'finished', label: 'Завершённые' },
 ];
 
+const disciplineOptions = [
+  { key: 'all', label: 'Все дисциплины' },
+  ...DISCIPLINES.map((item) => ({ key: item.name, label: item.short })),
+];
+
 export default function CompetitionsScreen() {
   const competitions = useCompetitions();
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState<'all' | CompetitionStatus>('all');
+  const [discipline, setDiscipline] = useState('all');
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
 
@@ -33,9 +40,10 @@ export default function CompetitionsScreen() {
       competitions.data?.filter(
         (item) =>
           (status === 'all' || item.status === status) &&
+          (discipline === 'all' || item.discipline === discipline) &&
           `${item.title} ${item.discipline}`.toLowerCase().includes(query.toLowerCase()),
       ) ?? [],
-    [competitions.data, query, status],
+    [competitions.data, query, status, discipline],
   );
 
   const header = (
@@ -53,6 +61,7 @@ export default function CompetitionsScreen() {
           autoCapitalize="none"
         />
         <Chips options={statusOptions.map((item) => ({ key: item.key, label: item.label }))} value={status} onChange={(key) => setStatus(key as 'all' | CompetitionStatus)} />
+        <Chips options={disciplineOptions} value={discipline} onChange={setDiscipline} />
       </View>
     </>
   );

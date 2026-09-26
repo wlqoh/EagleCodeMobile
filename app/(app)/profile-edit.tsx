@@ -3,12 +3,15 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text } from 'react-native';
 
+import { Chips, MultiChips } from '@/components/ui';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Field } from '@/components/ui/Field';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { Screen } from '@/components/ui/Screen';
 import { useAuth } from '@/contexts/AuthContext';
+import { DISCIPLINES } from '@/core/disciplines';
+import { RANKS } from '@/core/ranks';
 import { useAthlete } from '@/hooks/useData';
 import { dataClient } from '@/services/client';
 import { Colors, font, space } from '@/theme/tokens';
@@ -23,24 +26,28 @@ export default function ProfileEditScreen() {
   const [syncedId, setSyncedId] = useState<string | null>(null);
   const [organization, setOrganization] = useState('');
   const [sportTitle, setSportTitle] = useState('');
-  const [disciplines, setDisciplines] = useState('');
+  const [disciplines, setDisciplines] = useState<string[]>([]);
+  const [unknownDisciplines, setUnknownDisciplines] = useState<string[]>([]);
 
   if (athlete.data && athlete.data.id !== syncedId) {
     setSyncedId(athlete.data.id);
     setOrganization(athlete.data.organization);
     setSportTitle(athlete.data.sportTitle);
-    setDisciplines(athlete.data.disciplines.join(', '));
+    const known = new Set(DISCIPLINES.map((item) => item.name));
+    setDisciplines(athlete.data.disciplines.filter((item) => known.has(item)));
+    setUnknownDisciplines(athlete.data.disciplines.filter((item) => !known.has(item)));
   }
+
+  const rankOptions = RANKS.some((item) => item.name === sportTitle)
+    ? RANKS.map((item) => ({ key: item.name, label: item.name }))
+    : [{ key: sportTitle, label: sportTitle }, ...RANKS.map((item) => ({ key: item.name, label: item.name }))];
 
   const update = useMutation({
     mutationFn: () =>
       dataClient.updateAthlete(user!.athleteId!, {
         organization,
         sportTitle,
-        disciplines: disciplines
-          .split(',')
-          .map((item) => item.trim())
-          .filter(Boolean),
+        disciplines: [...unknownDisciplines, ...disciplines],
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['athlete'] });
@@ -77,11 +84,19 @@ export default function ProfileEditScreen() {
       >
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           <Field label="Организация" value={organization} onChangeText={setOrganization} />
-          <Field label="Спортивный разряд" value={sportTitle} onChangeText={setSportTitle} />
           <Field
-            label="Дисциплины через запятую"
-            value={disciplines}
-            onChangeText={setDisciplines}
+            label="Спортивный разряд"
+            inputComponent={<Chips options={rankOptions} value={sportTitle} onChange={setSportTitle} />}
+          />
+          <Field
+            label="Дисциплины"
+            inputComponent={
+              <MultiChips
+                options={DISCIPLINES.map((item) => ({ key: item.name, label: item.name }))}
+                values={disciplines}
+                onChange={setDisciplines}
+              />
+            }
           />
           {update.isError ? (
             <Text style={styles.error}>Не удалось сохранить изменения</Text>

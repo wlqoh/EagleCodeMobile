@@ -3,6 +3,7 @@ import { ChevronRight, LogOut } from 'lucide-react-native';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Href } from 'expo-router';
 
+import { EagleAvatar } from '@/components/features/EagleAvatar';
 import { ScreenHeader } from '@/components/layout/ScreenHeader';
 import { Card } from '@/components/ui/Card';
 import { Chips } from '@/components/ui/Chips';
@@ -44,9 +45,11 @@ export default function MoreScreen() {
     <Screen>
       <ScreenHeader eyebrow="Кабинет участника" title="Ещё" />
       <Card style={styles.userCard}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{athlete.data?.avatarInitials ?? user?.fullName.slice(0, 2)}</Text>
-        </View>
+        {athlete.data ? (
+          <EagleAvatar meters={athlete.data.meters} size={48} />
+        ) : (
+          <View style={styles.avatar} />
+        )}
         <View style={styles.userInfo}>
           <Text style={styles.userName}>{user?.fullName}</Text>
           <Text style={styles.userEmail}>{user?.email}</Text>
@@ -94,12 +97,6 @@ const createStyles = (colors: Colors) =>
     backgroundColor: colors.highest,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  avatarText: {
-    color: colors.primary,
-    fontFamily: font.displayBold,
-    fontSize: 16,
-    textTransform: 'uppercase',
   },
   userInfo: {
     flex: 1,

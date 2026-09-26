@@ -4,8 +4,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '@/theme/ThemeContext';
 import { Colors, font, radius } from '@/theme/tokens';
 import { useThemedStyles } from '@/theme/useThemedStyles';
+import type { BadgeTone } from '@/theme/badgeTones';
 
-export type BadgeTone = 'default' | 'primary' | 'gold' | 'danger';
+export type { BadgeTone };
 
 type BadgeProps = PropsWithChildren<{ tone?: BadgeTone }>;
 
@@ -58,6 +59,18 @@ function createToneConfig(colors: Colors): Record<BadgeTone, { badge: object; te
     danger: {
       badge: { backgroundColor: colors.badgeDangerBg, borderColor: colors.badgeDangerBorder },
       text: { color: colors.badgeDangerText },
+    },
+    bronze: {
+      badge: { backgroundColor: colors.badgeBronzeBg, borderColor: colors.badgeBronzeBorder },
+      text: { color: colors.badgeBronzeText },
+    },
+    silver: {
+      badge: { backgroundColor: colors.badgeSilverBg, borderColor: colors.badgeSilverBorder },
+      text: { color: colors.badgeSilverText },
+    },
+    elite: {
+      badge: { backgroundColor: colors.badgeEliteBg, borderColor: colors.badgeEliteBorder },
+      text: { color: colors.badgeEliteText },
     },
   };
 }

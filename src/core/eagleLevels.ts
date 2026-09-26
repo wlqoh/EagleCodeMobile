@@ -1,17 +1,18 @@
-// Источник: EagleCode/src/domain/eagleLevels.ts (веб-версия, без изменений).
+// Источник: EagleCode/src/domain/eagleLevels.ts (веб-версия). Пороги изменены под аватарки-орлов —
+// расходится с вебом и сервером, см. EAGLE_AVATARS_PLAN.md, §9.
 import type { Athlete, EagleLevel } from './types';
 
 export const eagleLevels: EagleLevel[] = [
   { id: 'I', order: 1, name: 'Первый взлёт', minMeters: 0, maxMeters: 999 },
-  { id: 'II', order: 2, name: 'Уверенный старт', minMeters: 1_000, maxMeters: 2_499 },
-  { id: 'III', order: 3, name: 'Спортивный характер', minMeters: 2_500, maxMeters: 4_999 },
-  { id: 'IV', order: 4, name: 'Сильное крыло', minMeters: 5_000, maxMeters: 13_999 },
-  { id: 'V', order: 5, name: 'Мастер высоты', minMeters: 14_000, maxMeters: 24_999 },
-  { id: 'VI', order: 6, name: 'Лидер района', minMeters: 25_000, maxMeters: 49_999 },
-  { id: 'VII', order: 7, name: 'Чемпион республики', minMeters: 50_000, maxMeters: 74_999 },
-  { id: 'VIII', order: 8, name: 'Наставник', minMeters: 75_000, maxMeters: 99_999 },
-  { id: 'IX', order: 9, name: 'Легенда спорта', minMeters: 100_000, maxMeters: 149_999 },
-  { id: 'X', order: 10, name: 'Вершина Дагестана', minMeters: 150_000, maxMeters: null },
+  { id: 'II', order: 2, name: 'Уверенный старт', minMeters: 1_000, maxMeters: 1_999 },
+  { id: 'III', order: 3, name: 'Спортивный характер', minMeters: 2_000, maxMeters: 2_999 },
+  { id: 'IV', order: 4, name: 'Сильное крыло', minMeters: 3_000, maxMeters: 3_999 },
+  { id: 'V', order: 5, name: 'Мастер высоты', minMeters: 4_000, maxMeters: 4_999 },
+  { id: 'VI', order: 6, name: 'Лидер района', minMeters: 5_000, maxMeters: 5_999 },
+  { id: 'VII', order: 7, name: 'Чемпион республики', minMeters: 6_000, maxMeters: 6_999 },
+  { id: 'VIII', order: 8, name: 'Наставник', minMeters: 7_000, maxMeters: 7_999 },
+  { id: 'IX', order: 9, name: 'Легенда спорта', minMeters: 8_000, maxMeters: 9_999 },
+  { id: 'X', order: 10, name: 'Вершина Дагестана', minMeters: 10_000, maxMeters: null },
 ];
 
 export function getEagleProgress(meters: number, levels: EagleLevel[] = eagleLevels) {

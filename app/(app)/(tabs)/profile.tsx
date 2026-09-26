@@ -2,9 +2,11 @@ import { Link } from 'expo-router';
 import { Activity, Award, Bell, Medal, SquarePen, Trophy } from 'lucide-react-native';
 import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { EagleAvatar } from '@/components/features/EagleAvatar';
 import { EagleProgress } from '@/components/features/EagleProgress';
 import { LineChart } from '@/components/features/LineChart';
 import { MetricCard } from '@/components/features/MetricCard';
+import { RegaliaChips } from '@/components/features/RegaliaChips';
 import { ScreenHeader } from '@/components/layout/ScreenHeader';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
@@ -12,8 +14,9 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { Screen } from '@/components/ui/Screen';
 import { useAuth } from '@/contexts/AuthContext';
+import { disciplineLabel } from '@/core/disciplines';
 import { placeholders } from '@/core/placeholders';
-import { useAthlete, useLevels, useNotifications, useResults } from '@/hooks/useData';
+import { useAchievements, useAthlete, useLevels, useNotifications, useResults } from '@/hooks/useData';
 import { useTheme } from '@/theme/ThemeContext';
 import { Colors, font, space } from '@/theme/tokens';
 import { useThemedStyles } from '@/theme/useThemedStyles';
@@ -25,6 +28,7 @@ export default function ProfileScreen() {
   const levels = useLevels();
   const results = useResults();
   const notifications = useNotifications();
+  const achievements = useAchievements(athlete.data?.id ?? user?.athleteId);
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
 
@@ -36,6 +40,7 @@ export default function ProfileScreen() {
     levels.refetch();
     results.refetch();
     notifications.refetch();
+    achievements.refetch();
   };
 
   const header = (
@@ -99,21 +104,13 @@ export default function ProfileScreen() {
         {header}
 
         <Card style={styles.banner}>
-          <View style={styles.avatarHero}>
-            <Text style={styles.avatarHeroText}>{profile.avatarInitials}</Text>
-          </View>
+          <EagleAvatar meters={profile.meters} size={56} />
           <View style={styles.bannerTitleRow}>
             <Text style={styles.bannerName}>{profile.fullName}</Text>
             <Text style={styles.verifiedLabel}>ПРОФИЛЬ ПОДТВЕРЖДЁН</Text>
           </View>
-          <Text style={styles.bannerSubtitle}>
-            {profile.sportTitle} · {profile.organization}
-          </Text>
-          <View style={styles.tagList}>
-            {profile.disciplines.map((item) => (
-              <Badge key={item}>{item}</Badge>
-            ))}
-          </View>
+          <Text style={styles.bannerSubtitle}>{profile.organization}</Text>
+          <RegaliaChips sportTitle={profile.sportTitle} achievements={achievements.data} />
           <View style={styles.bannerQuick}>
             <View style={styles.bannerQuickItem}>
               <Text style={styles.quickLabel}>Рейтинг РД</Text>
@@ -195,9 +192,7 @@ export default function ProfileScreen() {
           <Text style={styles.sectionTitle}>Дисциплины</Text>
           <View style={styles.tagList}>
             {profile.disciplines.map((item) => (
-              <Badge key={item} tone="primary">
-                {item}
-              </Badge>
+              <Badge key={item}>{disciplineLabel(item)}</Badge>
             ))}
           </View>
         </Card>
@@ -234,19 +229,6 @@ const createStyles = (colors: Colors) =>
   banner: {
     marginHorizontal: space.lg,
     gap: space.sm,
-  },
-  avatarHero: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: colors.highest,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarHeroText: {
-    color: colors.primary,
-    fontFamily: font.displayBold,
-    fontSize: 20,
   },
   bannerTitleRow: {
     flexDirection: 'row',

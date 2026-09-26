@@ -1,13 +1,16 @@
 import { useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { EagleAvatar } from '@/components/features/EagleAvatar';
 import { EagleProgress } from '@/components/features/EagleProgress';
+import { RegaliaChips } from '@/components/features/RegaliaChips';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { Screen } from '@/components/ui/Screen';
-import { useAthlete, useCities, useLevels } from '@/hooks/useData';
+import { disciplineLabel } from '@/core/disciplines';
+import { useAchievements, useAthlete, useCities, useLevels } from '@/hooks/useData';
 import { Colors, font, space } from '@/theme/tokens';
 import { useThemedStyles } from '@/theme/useThemedStyles';
 
@@ -16,6 +19,7 @@ export default function AthleteDetailScreen() {
   const athlete = useAthlete(id);
   const cities = useCities();
   const levels = useLevels();
+  const achievements = useAchievements(id);
   const styles = useThemedStyles(createStyles);
 
   if (athlete.isError) {
@@ -45,13 +49,10 @@ export default function AthleteDetailScreen() {
     <Screen>
       <ScrollView contentContainerStyle={styles.content}>
         <Card style={styles.header}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{profile.avatarInitials}</Text>
-          </View>
+          <EagleAvatar meters={profile.meters} size={56} style={styles.avatar} />
           <Text style={styles.name}>{profile.fullName}</Text>
-          <Text style={styles.subtitle}>
-            {profile.sportTitle} · {profile.organization}
-          </Text>
+          <Text style={styles.subtitle}>{profile.organization}</Text>
+          <RegaliaChips sportTitle={profile.sportTitle} achievements={achievements.data} />
           {city ? <Text style={styles.city}>{city.name}</Text> : null}
         </Card>
 
@@ -61,9 +62,7 @@ export default function AthleteDetailScreen() {
           <Text style={styles.sectionTitle}>Дисциплины</Text>
           <View style={styles.tagList}>
             {profile.disciplines.map((item) => (
-              <Badge key={item} tone="primary">
-                {item}
-              </Badge>
+              <Badge key={item}>{disciplineLabel(item)}</Badge>
             ))}
           </View>
         </Card>
@@ -83,18 +82,7 @@ const createStyles = (colors: Colors) =>
     gap: space.xs,
   },
   avatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: colors.highest,
-    alignItems: 'center',
-    justifyContent: 'center',
     marginBottom: space.xs,
-  },
-  avatarText: {
-    color: colors.primary,
-    fontFamily: font.displayBold,
-    fontSize: 20,
   },
   name: {
     color: colors.text,

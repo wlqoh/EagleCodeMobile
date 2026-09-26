@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
-import { CalendarDays, CheckCircle2, Clock3, MapPin, Trophy, UsersRound } from 'lucide-react-native';
+import { CalendarDays, CheckCircle2, Clock3, MapPin, Tag, Trophy, UsersRound } from 'lucide-react-native';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Badge } from '@/components/ui/Badge';
@@ -10,6 +10,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { Screen } from '@/components/ui/Screen';
 import { useAuth } from '@/contexts/AuthContext';
+import { requirementsFor } from '@/core/disciplines';
 import { useApplications } from '@/hooks/useData';
 import { dataClient } from '@/services/client';
 import { useTheme } from '@/theme/ThemeContext';
@@ -88,6 +89,13 @@ export default function CompetitionDetailScreen() {
               </View>
             </View>
             <View style={styles.factRow}>
+              <Tag color={colors.muted} size={16} />
+              <View>
+                <Text style={styles.factLabel}>Дисциплина</Text>
+                <Text style={styles.factValue}>{item.discipline}</Text>
+              </View>
+            </View>
+            <View style={styles.factRow}>
               <UsersRound color={colors.muted} size={16} />
               <View>
                 <Text style={styles.factLabel}>Лимит</Text>
@@ -142,14 +150,12 @@ export default function CompetitionDetailScreen() {
 
         <Card style={styles.section}>
           <Text style={styles.sectionTitle}>Требования</Text>
-          {['Заполненный профиль', 'Медицинский допуск', 'Подтверждённый разряд при наличии', 'Согласие с регламентом'].map(
-            (requirement) => (
-              <View key={requirement} style={styles.checkRow}>
-                <CheckCircle2 color={colors.primary} size={14} />
-                <Text style={styles.checkText}>{requirement}</Text>
-              </View>
-            ),
-          )}
+          {requirementsFor(item.discipline).map((requirement) => (
+            <View key={requirement} style={styles.checkRow}>
+              <CheckCircle2 color={colors.primary} size={14} />
+              <Text style={styles.checkText}>{requirement}</Text>
+            </View>
+          ))}
         </Card>
       </ScrollView>
     </Screen>

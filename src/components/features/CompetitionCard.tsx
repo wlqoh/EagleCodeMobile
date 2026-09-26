@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { disciplineLabel } from '@/core/disciplines';
 import type { Competition } from '@/core/types';
 import { useTheme } from '@/theme/ThemeContext';
 import { Colors, font, radius, space } from '@/theme/tokens';
@@ -28,6 +29,9 @@ export function CompetitionCard({ competition }: { competition: Competition }) {
           {statusLabel[competition.status]}
         </Badge>
         <Badge tone="gold">+{formatMeters(competition.rewardMeters)}</Badge>
+      </View>
+      <View style={styles.disciplineRow}>
+        <Badge>{disciplineLabel(competition.discipline)}</Badge>
       </View>
       <View style={styles.icon}>
         <Trophy color={colors.primary} size={22} />
@@ -72,6 +76,9 @@ const createStyles = (colors: Colors) =>
     metaRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+    },
+    disciplineRow: {
+      flexDirection: 'row',
     },
     icon: {
       width: 44,

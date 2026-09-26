@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/Input';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { Screen } from '@/components/ui/Screen';
 import { useAuth } from '@/contexts/AuthContext';
+import { DISCIPLINES } from '@/core/disciplines';
 import { placeholders } from '@/core/placeholders';
 import type { Athlete } from '@/core/types';
 import { useAthletes, useCities } from '@/hooks/useData';
@@ -31,9 +32,9 @@ export default function RatingScreen() {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
 
-  const disciplines = useMemo(
-    () => ['Все', ...new Set(athletes.data?.flatMap((item) => item.disciplines) ?? [])],
-    [athletes.data],
+  const disciplineOptions = useMemo(
+    () => [{ key: 'Все', label: 'Все' }, ...DISCIPLINES.map((item) => ({ key: item.name, label: item.short }))],
+    [],
   );
 
   const filtered = useMemo(() => {
@@ -77,11 +78,7 @@ export default function RatingScreen() {
           onChangeText={setQuery}
           autoCapitalize="none"
         />
-        <Chips
-          options={disciplines.slice(0, 6).map((item) => ({ key: item, label: item }))}
-          value={discipline}
-          onChange={setDiscipline}
-        />
+        <Chips options={disciplineOptions} value={discipline} onChange={setDiscipline} />
       </View>
     </>
   );
