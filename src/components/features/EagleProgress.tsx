@@ -1,12 +1,11 @@
-import { Bird, Lock, Medal } from 'lucide-react-native';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
+import { getEagleImage } from '@/components/features/eagleImages';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { Progress } from '@/components/ui/Progress';
 import { getEagleProgress } from '@/core/eagleLevels';
 import type { EagleLevel } from '@/core/types';
-import { useTheme } from '@/theme/ThemeContext';
 import { Colors, font, radius, space } from '@/theme/tokens';
 import { useThemedStyles } from '@/theme/useThemedStyles';
 import { formatMeters } from '@/utils/format';
@@ -18,16 +17,18 @@ type EagleProgressProps = {
 };
 
 export function EagleProgress({ meters, levels, detailed = true }: EagleProgressProps) {
-  const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
   const { level, next, progress, remaining } = getEagleProgress(meters, levels);
 
   return (
     <Card style={styles.card}>
       <View style={styles.emblemRow}>
-        <View style={styles.emblem}>
-          <Bird color={colors.primary} size={20} />
-        </View>
+        <Image
+          source={getEagleImage(level.order)}
+          accessibilityRole="image"
+          accessibilityLabel={`Орёл ${level.id} — ${level.name}`}
+          style={styles.emblem}
+        />
         <Text style={styles.emblemLabel}>ОРЁЛ</Text>
       </View>
       <Text style={styles.eyebrow}>Текущий ранг высоты</Text>
@@ -58,11 +59,12 @@ export function EagleProgress({ meters, levels, detailed = true }: EagleProgress
                 key={item.id}
                 style={[styles.miniItem, passed && styles.miniPassed, current && styles.miniCurrent]}
               >
-                {item.order > level.order ? (
-                  <Lock color={colors.muted} size={14} />
-                ) : (
-                  <Medal color={current ? colors.onPrimary : colors.primary} size={14} />
-                )}
+                <Image
+                  source={getEagleImage(item.order, item.order > level.order)}
+                  accessibilityRole="image"
+                  accessibilityLabel={`Орёл ${item.id} — ${item.name}`}
+                  style={styles.miniIcon}
+                />
                 <Text style={[styles.miniId, current && styles.miniTextCurrent]}>{item.id}</Text>
                 <Text style={[styles.miniMeters, current && styles.miniTextCurrent]} numberOfLines={1}>
                   {formatMeters(item.minMeters)}
@@ -157,6 +159,10 @@ const createStyles = (colors: Colors) =>
   },
   miniPassed: {
     borderColor: colors.badgePrimaryBorder,
+  },
+  miniIcon: {
+    width: 18,
+    height: 18,
   },
   miniCurrent: {
     backgroundColor: colors.primary,
