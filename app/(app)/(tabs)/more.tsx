@@ -28,7 +28,7 @@ export default function MoreScreen() {
 
   return (
     <Screen>
-      <ScreenHeader eyebrow={user?.name ?? ''} title="Ещё" />
+      <ScreenHeader eyebrow={user?.fullName ?? ''} title="Ещё" />
       <View style={styles.menu}>
         {menuItems.map((item) => (
           <Link key={item.label} href={item.href} asChild>

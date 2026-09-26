@@ -1,5 +1,8 @@
 /// <reference types="jest" />
-import '@react-native-async-storage/async-storage/jest/async-storage-mock';
+
+jest.mock('@react-native-async-storage/async-storage', () =>
+  require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
+);
 
 jest.mock('expo-secure-store', () => {
   const store = new Map<string, string>();
